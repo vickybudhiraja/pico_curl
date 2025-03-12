@@ -6,6 +6,9 @@ project(pico_curl C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
+find_package(libcurl REQUIRED)
+target_link_libraries(your_target libcurl::libcurl)
+
 pico_sdk_init()
 
 add_executable(pico_curl hello.c)
