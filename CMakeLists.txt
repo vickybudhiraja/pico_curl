@@ -6,7 +6,7 @@ include_directories(${PICO_SDK_PATH})
 # include_directories(${PICO_SDK_PATH}/src/common/pico_stdlib_headers/include)
 # include_directories(${PICO_SDK_PATH}/src/common/pico_base_headers/include)
 
-include_directories(${CMAKE_SOURCE_DIR})
+# include_directories(${CMAKE_SOURCE_DIR})
 # include_directories(${PICO_SDK_PATH}/lib/lwip/src/include)
 # include_directories(${PICO_SDK_PATH}/lib/lwip/src/include/arch)
 # include_directories(${PICO_SDK_PATH}/src/rp2_common/pico_lwip/include)
@@ -25,9 +25,37 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 add_executable(pico_curl hello.c)
-
-target_link_libraries(pico_curl pico_cyw43_arch_none)
-
 pico_sdk_init()
+
+# Define CYW43 architecture
+add_compile_definitions(PICO_CYW43_ARCH_THREADSAFE_BACKGROUND)
+
+target_include_directories(pico_curl PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+# target_link_libraries(pico_curl pico_cyw43_arch_lwip_poll pico_stdlib )
+target_link_libraries(pico_curl 
+    pico_stdlib 
+    # cyw43_driver_base
+    hardware_i2c
+    pico_cyw43_arch_lwip_threadsafe_background
+    # pico_lwip_http
+    # hardware_adc
+    # freertos
+)
+# add_compile_definitions(PICO_CYW43_ARCH_THREADSAFE_BACKGROUND)
+
+target_include_directories(pico_curl PRIVATE 
+
+    ${PICO_SDK_PATH}/src/rp2_common/pico_async_context/include
+
+    ${PICO_SDK_PATH}/src/rp2_common/pico_rand/include
+
+    ${PICO_SDK_PATH}/src/rp2_common/pico_lwip/include
+
+    ${PICO_SDK_PATH}/lib/lwip/src/include
+    ${PICO_SDK_PATH}/lib/cyw43-driver/src
+    ${PICO_SDK_PATH}/src/rp2_common/pico_cyw43_driver/include
+    ${PICO_SDK_PATH}/src/rp2_common/pico_cyw43_arch/include
+)
+
 
 pico_add_extra_outputs(pico_curl)
