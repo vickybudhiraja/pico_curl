@@ -5,6 +5,12 @@
 
 int main() {
     stdio_init_all();
+
+    if (cyw43_arch_init()) {
+        printf("Failed to initialize Wi-Fi module\n");
+        return 1;
+    }
+
     while (1) {
         printf("Hello, Curl!\n");
         sleep_ms(1000);
