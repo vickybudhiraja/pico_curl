@@ -5,6 +5,13 @@
 #include "pico/stdlib.h"
 #include "pico/cyw43_arch.h"
 #include "defs.h"
+// #include "lwip/sockets.h"
+// #include "lwip/dns.h"
+// #include "lwip/ip4_addr.h"
+// #include "lwip/inet.h"
+// #include "lwip/netdb.h"
+#include "lwip/pbuf.h"
+#include "lwip/tcp.h"
 
 char ssid[] = WIFI_SSID;
 char pass[] = WIFI_PASSWORD;
@@ -26,4 +33,9 @@ int main() {
         return 1;
     }
     printf("connected\n");
+
+    
+    
+    struct tcp_pcb *tcp_connection = tcp_new();
+    ip_addr_t ip_address;
 }
