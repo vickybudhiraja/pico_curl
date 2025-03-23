@@ -12,9 +12,11 @@
 // #include "lwip/netdb.h"
 #include "lwip/pbuf.h"
 #include "lwip/tcp.h"
+#include "lwip/dns.h"
 
 char ssid[] = WIFI_SSID;
 char pass[] = WIFI_PASSWORD;
+
 
 void http_get_request() {
 
@@ -76,5 +78,12 @@ int main() {
     
     struct tcp_pcb *tcp_connection = tcp_new();
     ip_addr_t ip_address;
+
+    // let the wifi init properly
+    while (1) {
+        sleep_ms(1000);
+    }
+
+    http_get_request();
 
 }
