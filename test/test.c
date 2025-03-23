@@ -16,6 +16,44 @@
 char ssid[] = WIFI_SSID;
 char pass[] = WIFI_PASSWORD;
 
+void http_get_request() {
+
+    // new tcp connection obj
+    struct tcp_pcb *tcp_connection = tcp_new();
+    if (tcp_connection == NULL) {
+        printf("Failed to create TCP connection\n");
+        return;
+    }
+
+    // 
+    ip_addr_t ip_address;
+    gethostbyname(API_HOST, &ip_address);
+    // netif_get_hostname(API_HOST);
+    // if (netconn_gethostbyname(API_HOST, &ip_address) != ERR_OK) {
+    //     printf("Failed to resolve hostname\n");
+    //     tcp_close(tcp_connection);
+    //     return;
+    // }
+
+    if (tcp_connect(tcp_connection, &ip_address, API_PORT, NULL) != ERR_OK) {
+        printf("Failed to connect to server\n");
+        tcp_close(tcp_connection);
+        return;
+    }
+
+    char request[256];
+    snprintf(request, sizeof(request), "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\n\r\n", API_ENDPOINT, API_HOST);
+    tcp_write(tcp_connection, request, strlen(request), TCP_WRITE_FLAG_COPY);
+
+    struct pbuf *received_data;
+    while ((received_data = tcp_input(tcp_connection, NULL)) != NULL) {
+        char *data_ptr = (char *)received_data->payload;
+        printf("Received data: %s\n", data_ptr);
+        pbuf_free(received_data);
+    }
+    tcp_close(tcp_connection);
+}
+
 int main() {
     stdio_init_all();
 
@@ -38,4 +76,5 @@ int main() {
     
     struct tcp_pcb *tcp_connection = tcp_new();
     ip_addr_t ip_address;
+
 }
